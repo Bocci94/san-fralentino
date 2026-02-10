@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>San Fralentino 💕</title>
+    <title>Una domanda... 💕</title>
     <style>
       * {
         margin: 0;
@@ -393,7 +393,7 @@
           <img id="characterGif" class="hidden" src="" alt="Character" />
         </div>
 
-        <h1 id="question">Vuoi essere la mia Fralentina?</h1>
+        <h1 id="question">Sei pronta ad odiarmi?</h1>
 
         <div class="buttons" id="buttonsContainer">
           <button id="yesBtn" onclick="handleAnswer('yes')"></button>
@@ -433,16 +433,17 @@
 
       const questions = [
         {
-          character: "images/gif1.gif",
+          character: "images/first.jpg",
           isGif: true,
-          question: "Vuoi essere la mia Fralentina?",
-          yesText: "Ovvio! ❤️",
-          noText: "Mmm...",
-          extraGif: "images/grr.jpg",
-          successCharacter: "images/Heh.jpg",
+          question: "Quale mia frase ti piace di più?",
+          yesText: "Siii ❤️",
+          noText: "No ti prego...",
+          extraGif: "images/firstgrr.jpg",
+          successCharacter: "images/ok2.jpg",
           successIsGif: true,
-          successTitle: "Evviva!",
-          successMessage: "Sapevo che avresti detto di sì!",
+          successTitle: "Iniziamo il Quiz!",
+          successMessage:
+            "Vediamo a quante domande risponderai correttamente...",
           type: "normal",
         },
         {
@@ -452,7 +453,7 @@
           yesText: "Ti amo ❤️",
           noText: "Zio porco",
           extraGif: "images/tavolo.gif",
-          successCharacter: "images/ok2.jpg",
+          successCharacter: "images/ok22.jpg",
           successIsGif: true,
           successTitle: "Esatto!",
           successMessage: "Non le dico mai quelle brutte parole!",
@@ -503,6 +504,45 @@
           type: "normal",
         },
         {
+          character: "images/gattogif.jpg",
+          isGif: true,
+          question: "Qual è il nome del mio gatto?",
+          yesText: "Eevee",
+          noText: "CicciobesaConlapanza",
+          extraGif: "images/gattogrr.jpg",
+          successCharacter: "images/gattook.jpg",
+          successIsGif: true,
+          successTitle: "Cattivissima!",
+          successMessage: "So che hai cliccato sulla risposta sbagliata!",
+          type: "normal", // Tipo speciale che va direttamente alla fine
+        },
+        {
+          character: "images/gattogif.jpg",
+          isGif: true,
+          question: "?",
+          yesText: "",
+          noText: "",
+          extraGif: "images/gattogrr.jpg",
+          successCharacter: "images/mmhgif.jpg",
+          successIsGif: true,
+          successTitle: "Mmmh, cos'altro chiederti..",
+          successMessage: "Ah giusto!",
+          type: "direct-success", // Tipo speciale che va direttamente alla fine
+        },
+        {
+          character: "images/gif1.gif",
+          isGif: true,
+          question: "Vuoi essere la mia Fralentina?",
+          yesText: "Ovvio! ❤️",
+          noText: "Mmm...",
+          extraGif: "images/grr.jpg",
+          successCharacter: "images/Heh.jpg",
+          successIsGif: true,
+          successTitle: "Evviva!",
+          successMessage: "Sapevo che avresti detto di sì!",
+          type: "normal",
+        },
+        {
           character: "images/gif6.jpg",
           isGif: true,
           question: "Per tua fortuna sono finite! Sei pronta per il regalo?",
@@ -515,6 +555,7 @@
           successMessage: "Sapevo che ti stavi divertendo! Ancora una domanda!",
           type: "final", // Tipo speciale che va direttamente alla fine
         },
+        //type: "final", // Tipo speciale che va direttamente alla fine
       ];
 
       const messages = [
@@ -558,6 +599,27 @@
           // Per l'ultima domanda, entrambe le risposte portano alla fine
           if (answer === "yes") {
             showFinalMessage();
+          } else {
+            moveButton();
+          }
+        } else if (current.type === "skip-success") {
+          // Salta la success screen e vai direttamente alla prossima domanda
+          if (answer === "yes") {
+            attempts = 0;
+            wrongClicks = 0;
+            createHearts();
+            document
+              .getElementById("extraGifContainer")
+              .classList.add("hidden");
+
+            // Vai direttamente alla prossima domanda
+            currentQuestion++;
+            if (currentQuestion >= questions.length) {
+              showFinalMessage();
+              return;
+            }
+
+            loadNextQuestion();
           } else {
             moveButton();
           }
@@ -668,9 +730,19 @@
         document.getElementById("extraGifContainer").classList.add("hidden");
         document.getElementById("thirdBtn").classList.add("hidden");
 
+        loadNextQuestion();
+      }
+
+      function loadNextQuestion() {
         const current = questions[currentQuestion];
         document.getElementById("questionNumber").textContent =
           `Domanda ${currentQuestion + 1} di 5000`;
+
+        // Se il tipo è direct-success, salta direttamente alla success screen
+        if (current.type === "direct-success") {
+          handleYes();
+          return;
+        }
 
         const characterEmoji = document.getElementById("character");
         const characterGif = document.getElementById("characterGif");
@@ -702,16 +774,16 @@
         const container = document.getElementById("container");
         container.innerHTML = `
     <div class="success-screen">
-      <img src="images/final.jpeg" style="width: 250px; height: 250px; object-fit: cover; border-radius: 20px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);" alt="Noi" />
-      <h1 style="margin-top: 10px;">WOW! Hai resistito a tutte queste domande!</h1>
-      <p class="message" style="margin-top: 10px; font-size: 1.3rem;">
+      <img src="images/final.jpeg" style="width: 300px; height: 300px; object-fit: cover; border-radius: 20px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);" alt="Noi" />
+      <h1 style="margin-top: 20px;">WOW! Hai resistito a tutte queste domande!</h1>
+      <p class="message" style="margin-top: 20px; font-size: 1.3rem;">
         Quanto mi stai odiando in questo momento?<br>
       </p>
       <p style="font-size: 1.8rem; margin-top: 40px; color: #1976d2; font-weight: 600;">
         Ti amo Fra 💙
       </p>
       <p style="font-size: 1rem; margin-top: 30px; color: #999;">
-        Buon Primo San Fralentino!
+        Buon San Fralentino 2026!
       </p>
     </div>
   `;
