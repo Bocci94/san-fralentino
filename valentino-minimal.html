@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Una domanda... 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #fef6f9;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+            max-width: 600px;
+        }
+
+        .character {
+            font-size: 180px;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+            display: inline-block;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+        }
+
+        .character img {
+            width: 250px;
+            height: 250px;
+            object-fit: contain;
+            border-radius: 20px;
+        }
+
+        .character span {
+            display: inline-block;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            font-family: inherit;
+            font-size: 1.3rem;
+            font-weight: 600;
+            padding: 18px 50px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        #yesBtn {
+            background: #ff6b9d;
+            color: white;
+        }
+
+        #yesBtn:hover {
+            background: #ff5588;
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+        }
+
+        #noBtn {
+            background: #e0e0e0;
+            color: #666;
+            position: relative;
+        }
+
+        #noBtn:hover {
+            background: #d0d0d0;
+        }
+
+        .message {
+            margin-top: 30px;
+            font-size: 1.2rem;
+            color: #666;
+            min-height: 30px;
+            font-weight: 500;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .success-screen {
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .success-character {
+            font-size: 200px;
+            animation: celebrate 0.6s ease;
+        }
+
+        @keyframes celebrate {
+            0%, 100% {
+                transform: rotate(0deg) scale(1);
+            }
+            25% {
+                transform: rotate(-10deg) scale(1.1);
+            }
+            75% {
+                transform: rotate(10deg) scale(1.1);
+            }
+        }
+
+        .hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 30px;
+            opacity: 0;
+            animation: rise 4s ease-in forwards;
+        }
+
+        @keyframes rise {
+            0% {
+                bottom: -50px;
+                opacity: 1;
+            }
+            100% {
+                bottom: 100%;
+                opacity: 0;
+                transform: translateX(100px);
+            }
+        }
+
+        .gif-container {
+            margin-top: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .gif-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .character {
+                font-size: 120px;
+            }
+
+            button {
+                font-size: 1.1rem;
+                padding: 15px 40px;
+            }
+        }
+
+        .question-number {
+            font-size: 1rem;
+            color: #999;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts" id="hearts"></div>
+
+    <div class="container" id="container">
+        <div id="questionScreen">
+            <div class="question-number" id="questionNumber">Domanda 1 di 5</div>
+            <div class="character" id="characterContainer">
+                <span id="character">🐻</span>
+                <img id="characterGif" class="hidden" src="" alt="Character">
+            </div>
+            <h1 id="question">Vuoi essere la mia Fralentina?</h1>
+            
+            <div class="buttons">
+                <button id="yesBtn" onclick="handleYes()">Sì</button>
+                <button id="noBtn" onmouseover="moveButton()">No</button>
+            </div>
+            
+            <div class="message" id="message"></div>
+        </div>
+
+        <div id="successScreen" class="hidden success-screen">
+            <div class="success-character" id="successCharacter">🎉</div>
+            <h1 id="successTitle">Evviva!</h1>
+            <p class="message" id="successMessage">Risposta giusta!</p>
+            
+            <div class="gif-container hidden" id="gifContainer">
+                <img id="gifImage" src="" alt="Celebration">
+            </div>
+            
+            <div class="buttons" style="margin-top: 40px;">
+                <button id="yesBtn" onclick="nextQuestion()">Prossima →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 0;
+        let attempts = 0;
+
+        const questions = [
+            {
+                character: "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDhxYzJ0eDZvZ3gyNnN6dGRvZm1oYXBtZnpmZnppbDRxYzR3aHdvMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MDJ9IbxxvDUQM/giphy.gif", // Sostituisci con la tua GIF
+                isGif: true,
+                question: "Vuoi essere la mia Fralentina?",
+                successCharacter: "🎉",
+                successTitle: "Evviva!",
+                successMessage: "Sapevo che avresti detto di sì!"
+            },
+            {
+                character: "🍕",
+                question: "Ananas sulla pizza?",
+                successCharacter: "🙏",
+                successTitle: "Grazie!",
+                successMessage: "Finalmente qualcuno di buongusto!"
+            },
+            {
+                character: "🛋️",
+                question: "Netflix o uscire?",
+                successCharacter: "😌",
+                successTitle: "Perfetto!",
+                successMessage: "Divano e coperta sempre"
+            },
+            {
+                character: "🎮",
+                question: "Ti va bene se gioco fino tardi?",
+                successCharacter: "🎯",
+                successTitle: "Top!",
+                successMessage: "Prometto massimo le 3"
+            },
+            {
+                character: "💙",
+                question: "Ti piaccio anche quando sono un disastro?",
+                successCharacter: "🥰",
+                successTitle: "Wow!",
+                successMessage: "Allora posso essere me stesso"
+            }
+        ];
+
+        const messages = [
+            "Ehi, quello è il pulsante sbagliato!",
+            "Il pulsante è scappato 😂",
+            "Dai, sai quale cliccare",
+            "Ancora? Clicca l'altro!",
+            "Ok basta, clicca SÌ"
+        ];
+
+        function moveButton() {
+            attempts++;
+            const noBtn = document.getElementById('noBtn');
+            const yesBtn = document.getElementById('yesBtn');
+            
+            // Show message
+            const messageIndex = Math.min(attempts - 1, messages.length - 1);
+            document.getElementById('message').textContent = messages[messageIndex];
+            
+            // Move No button randomly
+            const x = (Math.random() - 0.5) * 300;
+            const y = (Math.random() - 0.5) * 200;
+            noBtn.style.transform = `translate(${x}px, ${y}px)`;
+            
+            // Grow Yes button
+            const scale = 1 + (attempts * 0.15);
+            yesBtn.style.transform = `scale(${scale})`;
+        }
+
+        function handleYes() {
+            attempts = 0;
+            createHearts();
+            
+            document.getElementById('questionScreen').classList.add('hidden');
+            document.getElementById('successScreen').classList.remove('hidden');
+            
+            const current = questions[currentQuestion];
+            document.getElementById('successCharacter').textContent = current.successCharacter;
+            document.getElementById('successTitle').textContent = current.successTitle;
+            document.getElementById('successMessage').textContent = current.successMessage;
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            
+            if (currentQuestion >= questions.length) {
+                showFinalMessage();
+                return;
+            }
+            
+            // Reset screens
+            document.getElementById('successScreen').classList.add('hidden');
+            document.getElementById('questionScreen').classList.remove('hidden');
+            
+            // Load next question
+            const current = questions[currentQuestion];
+            document.getElementById('questionNumber').textContent = `Domanda ${currentQuestion + 1} di ${questions.length}`;
+            
+            // Handle character (emoji or GIF)
+            const characterEmoji = document.getElementById('character');
+            const characterGif = document.getElementById('characterGif');
+            
+            if (current.isGif) {
+                characterEmoji.classList.add('hidden');
+                characterGif.classList.remove('hidden');
+                characterGif.src = current.character;
+            } else {
+                characterGif.classList.add('hidden');
+                characterEmoji.classList.remove('hidden');
+                characterEmoji.textContent = current.character;
+            }
+            
+            document.getElementById('question').textContent = current.question;
+            document.getElementById('message').textContent = '';
+            
+            // Reset buttons
+            document.getElementById('noBtn').style.transform = 'translate(0, 0)';
+            document.getElementById('yesBtn').style.transform = 'scale(1)';
+        }
+
+        function showFinalMessage() {
+            const container = document.getElementById('container');
+            container.innerHTML = `
+                <div class="success-screen">
+                    <div class="success-character" style="font-size: 220px;">🎊</div>
+                    <h1 style="margin-top: 20px;">Complimenti!</h1>
+                    <p class="message" style="margin-top: 20px; font-size: 1.3rem;">
+                        Hai completato tutte le domande!<br>
+                        Grazie per aver sopportato questo quiz 😂
+                    </p>
+                    <p style="font-size: 1.8rem; margin-top: 40px; color: #ff6b9d; font-weight: 600;">
+                        Ti voglio bene 💙
+                    </p>
+                    <p style="font-size: 1rem; margin-top: 30px; color: #999;">
+                        Buon San Valentino 2026!
+                    </p>
+                </div>
+            `;
+            
+            // Create massive hearts
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => createHearts(), i * 100);
+            }
+        }
+
+        function createHearts() {
+            const heartsContainer = document.getElementById('hearts');
+            const heartEmojis = ['❤️', '💕', '💖', '💗', '💙'];
+            
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                    heartsContainer.appendChild(heart);
+                    
+                    setTimeout(() => heart.remove(), 4000);
+                }, i * 100);
+            }
+        }
+
+        // Initialize first question
+        window.addEventListener('DOMContentLoaded', function() {
+            const firstQuestion = questions[0];
+            const characterEmoji = document.getElementById('character');
+            const characterGif = document.getElementById('characterGif');
+            
+            if (firstQuestion.isGif) {
+                characterEmoji.classList.add('hidden');
+                characterGif.classList.remove('hidden');
+                characterGif.src = firstQuestion.character;
+            }
+        });
+    </script>
+</body>
+</html>
