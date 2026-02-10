@@ -25,7 +25,7 @@
 
       .container {
         text-align: center;
-        padding: 40px;
+        padding: 10px 40px 40px 40px;
         max-width: 600px;
       }
 
@@ -116,24 +116,24 @@
       }
 
       #yesBtn {
-        background: #ff6b9d;
+        background: #64b5f6;
         color: white;
       }
 
       #yesBtn:hover {
-        background: #ff5588;
+        background: #42a5f5;
         transform: scale(1.05);
-        box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+        box-shadow: 0 6px 20px rgba(100, 181, 246, 0.4);
       }
 
       #noBtn {
-        background: #ff6b9d;
+        background: #64b5f6;
         color: white;
         position: relative;
       }
 
       #noBtn:hover {
-        background: #ff5588;
+        background: #42a5f5;
       }
 
       /* Terzo pulsante per la domanda speciale */
@@ -340,13 +340,13 @@
 
       .popup-title {
         font-size: 2rem;
-        color: #ff6b9d;
+        color: #1976d2;
         margin-bottom: 20px;
         font-weight: 700;
       }
 
       .popup-button {
-        background: #ff6b9d;
+        background: #64b5f6;
         color: white;
         border: none;
         padding: 15px 40px;
@@ -359,7 +359,7 @@
       }
 
       .popup-button:hover {
-        background: #ff5588;
+        background: #42a5f5;
         transform: scale(1.05);
       }
     </style>
@@ -446,7 +446,7 @@
           type: "normal",
         },
         {
-          character: "images/gif2.gif",
+          character: "images/gif22.gif",
           isGif: true,
           question: "Quale mia frase ti piace di più?",
           yesText: "Ti amo ❤️",
@@ -455,7 +455,7 @@
           successCharacter: "images/ok2.jpg",
           successIsGif: true,
           successTitle: "Esatto!",
-          successMessage: "Sapevo che le parole dolci vincono sempre!",
+          successMessage: "Non le dico mai quelle brutte parole!",
           type: "normal",
         },
         {
@@ -485,8 +485,35 @@
           successCharacter: "images/ok44.jpg",
           successIsGif: true,
           successTitle: "Daje!",
-          successMessage: "Hai risposto correttamente a tutte queste domande!",
+          successMessage:
+            "Hai risposto correttamente a tutte queste domande! Forse è vero che mi ami...",
           type: "special-popup",
+        },
+        {
+          character: "images/gif5.gif",
+          isGif: true,
+          question: "Stanca di tutte queste domande?",
+          yesText: "No, sono divertenti!",
+          noText: "Si, basta ti prego",
+          extraGif: "images/grr5.jpg",
+          successCharacter: "images/ok5.jpg",
+          successIsGif: true,
+          successTitle: "Perfetto!",
+          successMessage: "Sapevo che ti stavi divertendo! Ancora una domanda!",
+          type: "normal",
+        },
+        {
+          character: "images/gif6.jpg",
+          isGif: true,
+          question: "Per tua fortuna sono finite! Sei pronta per il regalo?",
+          yesText: "SIIII! 🎁",
+          noText: "SIIII con una I in meno",
+          extraGif: "images/grr6.jpg",
+          successCharacter: "images/ok5.jpg",
+          successIsGif: true,
+          successTitle: "Perfetto!",
+          successMessage: "Sapevo che ti stavi divertendo! Ancora una domanda!",
+          type: "final", // Tipo speciale che va direttamente alla fine
         },
       ];
 
@@ -527,6 +554,13 @@
           if (wrongClicks >= 5) {
             document.getElementById("thirdBtn").classList.remove("hidden");
           }
+        } else if (current.type === "final") {
+          // Per l'ultima domanda, entrambe le risposte portano alla fine
+          if (answer === "yes") {
+            showFinalMessage();
+          } else {
+            moveButton();
+          }
         } else {
           if (answer === "yes") {
             handleYes();
@@ -540,14 +574,12 @@
         const current = questions[currentQuestion];
 
         if (current.type === "special-popup") {
-          // Mostra popup invece di andare avanti
           const popupGifElement = document.getElementById("popupGif");
           if (current.popupGif) {
             popupGifElement.src = current.popupGif;
           }
           document.getElementById("popupOverlay").classList.remove("hidden");
         } else {
-          // Comportamento normale per domanda special
           handleYes();
         }
       }
@@ -582,8 +614,8 @@
             .classList.remove("hidden");
         }
 
-        const x = (Math.random() - 0.5) * 400;
-        const y = (Math.random() - 0.5) * 350;
+        const x = (Math.random() - 0.5) * 150;
+        const y = (Math.random() - 0.5) * 100;
         noBtn.style.transform = `translate(${x}px, ${y}px)`;
 
         const scale = 1 + attempts * 0.2;
@@ -670,12 +702,12 @@
         const container = document.getElementById("container");
         container.innerHTML = `
     <div class="success-screen">
-      <img src="images/final.jpeg" style="width: 300px; height: 300px; object-fit: cover; border-radius: 20px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);" alt="Noi" />
-      <h1 style="margin-top: 20px;">Complimenti!</h1>
-      <p class="message" style="margin-top: 20px; font-size: 1.3rem;">
+      <img src="images/final.jpeg" style="width: 250px; height: 250px; object-fit: cover; border-radius: 20px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);" alt="Noi" />
+      <h1 style="margin-top: 10px;">WOW! Hai resistito a tutte queste domande!</h1>
+      <p class="message" style="margin-top: 10px; font-size: 1.3rem;">
         Quanto mi stai odiando in questo momento?<br>
       </p>
-      <p style="font-size: 1.8rem; margin-top: 40px; color: #ff6b9d; font-weight: 600;">
+      <p style="font-size: 1.8rem; margin-top: 40px; color: #1976d2; font-weight: 600;">
         Ti amo Fra 💙
       </p>
       <p style="font-size: 1rem; margin-top: 30px; color: #999;">
